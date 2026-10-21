@@ -1,0 +1,127 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CATEGORIES } from '../lib/categories';
+---
+
+<BaseLayout title="About">
+  <article class="about">
+    <header>
+      <span class="eyebrow">📓 About</span>
+      <h1>About this notebook</h1>
+    </header>
+
+    <p>
+      I always fill only the front of a notebook. I start with a lot of energy,
+      then the glow fades and I drift away. For a long time I stopped starting
+      at all, and the days I wanted to look back on slowly blurred.
+    </p>
+    <p>
+      This site is my attempt to write into the back pages anyway. It may fade
+      again, but looking back, the small grains still sparkle.
+    </p>
+
+    <h2>What you'll find here</h2>
+    <ul class="topics">
+      <li><strong>Code</strong>: what I build, and what breaks along the way.</li>
+      <li><strong>Knitting</strong>: slow projects, one stitch at a time.</li>
+      <li><strong>Money</strong>: learning about real estate, auctions, and personal finance.</li>
+    </ul>
+
+    <div class="cat-row">
+      {
+        Object.entries(CATEGORIES).map(([key, cat]) => (
+          <a class="cat-pill" href={`/blog/category/${key}/`} style={`--c:${cat.color}; --c-soft:${cat.soft}`}>
+            {cat.label}
+          </a>
+        ))
+      }
+    </div>
+
+    <h2>About me</h2>
+    <p>
+      I'm a software developer. I write in the one hour a day I can spare, so
+      posts are short and imperfect on purpose. Posts are written in English
+      and Korean over time.
+    </p>
+    <!-- TODO: 이름/닉네임, 한두 줄 자기소개를 원하는 만큼만 추가하세요. -->
+
+    <h2>한국어로</h2>
+    <p>
+      늘 공책 앞쪽만 채우던 사람의 기록장입니다. 개발, 뜨개질, 돈 공부를
+      하루 한 시간씩 천천히 적어 갑니다. 오래 못 가더라도, 일단 뒷장까지
+      써 보려고 해요.
+    </p>
+
+    <h2>Find me</h2>
+    <p>
+      <a href="https://github.com/valiantotter" target="_blank" rel="noopener">GitHub →</a>
+    </p>
+  </article>
+
+  <style>
+    .about {
+      max-width: 42rem;
+      padding: 1.5rem 0 3rem;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 4.5vw, 2.4rem);
+      margin: 0 0 1.25rem;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin: 2.2rem 0 0.6rem;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.75;
+      margin: 0 0 1rem;
+    }
+
+    .topics {
+      color: var(--muted);
+      line-height: 1.75;
+      padding-left: 1.2rem;
+      margin: 0 0 1rem;
+    }
+
+    .topics strong {
+      color: var(--fg);
+    }
+
+    .cat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .cat-pill {
+      display: inline-block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--c, var(--muted));
+      background: var(--c-soft, var(--surface));
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      transition: transform 0.15s ease;
+    }
+
+    .cat-pill:hover {
+      transform: translateY(-1px);
+    }
+  </style>
+</BaseLayout>

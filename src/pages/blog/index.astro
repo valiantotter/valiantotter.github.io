@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES, getCategory } from '../../lib/categories';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+---
+
+<BaseLayout title="Posts · My Startup & Dev Diary">
+  <div class="page-head">
+    <h1>All posts</h1>
+    <p class="muted">{posts.length} {posts.length === 1 ? 'post' : 'posts'} so far.</p>
+  </div>
+
+  <nav class="cat-filter" aria-label="카테고리 필터">
+    <a class="cat-pill is-active" href="/blog/">전체</a>
+    {
+      Object.entries(CATEGORIES).map(([key, cat]) => (
+        <a class="cat-pill" href={`/blog/category/${key}/`} style={`--c:${cat.color}; --c-soft:${cat.soft}`}>
+          {cat.label}
+        </a>
+      ))
+    }
+  </nav>
+
+  {posts.length === 0 && (
+    <p class="empty">No posts yet — add one in <code>src/content/blog/</code>.</p>
+  )}
+
+  <ul class="post-list">
+    {
+      posts.map((post) => {
+        const cat = getCategory(post.data.category);
+        return (
+          <li>
+            <a class="post-card" href={`/blog/${post.id}/`}>
+              <div class="post-card-top">
+                <span class="cat-badge" style={`color:${cat.color}; background:${cat.soft}`}>
+                  {cat.label}
+                </span>
+                <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+              </div>
+              <h2>{post.data.title}</h2>
+              <p>{post.data.description}</p>
+              <span class="read-more">Read →</span>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+
+  <style>
+    .page-head {
+      margin-bottom: 1.5rem;
+    }
+    .page-head h1 {
+      margin: 0 0 0.3rem;
+      font-size: clamp(1.8rem, 4vw, 2.2rem);
+    }
+    .muted {
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .cat-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .cat-pill {
+      display: inline-block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+    }
+    .cat-pill:hover {
+      border-color: var(--c, var(--accent));
+      color: var(--c, var(--accent));
+    }
+    .cat-pill.is-active {
+      color: var(--fg);
+      background: var(--accent-soft);
+      border-color: transparent;
+    }
+
+    .empty {
+      color: var(--muted);
+    }
+    .post-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 2rem;
+      display: grid;
+      gap: 0.9rem;
+    }
+    .post-card {
+      display: block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.4rem;
+      text-decoration: none;
+      color: var(--fg);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+    .post-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+    }
+    .post-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .post-card time {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .cat-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+    }
+    .post-card h2 {
+      margin: 0 0 0.35rem;
+      font-size: 1.15rem;
+    }
+    .post-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .read-more {
+      display: inline-block;
+      margin-top: 0.6rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+  </style>
+</BaseLayout>
