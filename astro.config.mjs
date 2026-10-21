@@ -1,5 +1,7 @@
 import { defineConfig } from 'astro/config';
 
+import sitemap from '@astrojs/sitemap';
+
 // ──────────────────────────────────────────────────────────────────────────
 // 배포 설정 (deploy settings) — 딱 두 줄만 상황에 맞게 바꿔주면 돼.
 //
@@ -19,4 +21,5 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://valiantotter.github.io',
   base: '/',
+  integrations: [sitemap()],
 });
